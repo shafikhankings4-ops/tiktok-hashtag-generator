@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Viral Hashtag Generator</title>
+    <style>
+        /* Base Styling & Theme (TikTok Vibe) */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #010101;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: #121212;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid #252525;
+            text-align: center;
+        }
+
+        /* Title Style with Glow */
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        h1 span {
+            color: #fe2c55; /* TikTok Red/Pink */
+            text-shadow: 0 0 10px rgba(254, 44, 85, 0.5);
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #8a8a8a;
+            margin-bottom: 25px;
+        }
+
+        /* Dropdown Selection */
+        label {
+            display: block;
+            text-align: left;
+            font-size: 14px;
+            color: #25f4ee; /* TikTok Cyan */
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #1e1e1e;
+            border: 2px solid #252525;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        select:focus {
+            border-color: #fe2c55;
+        }
+
+        /* Generate Button */
+        .btn-generate {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #fe2c55, #25f4ee);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 25px;
+        }
+
+        .btn-generate:active {
+            transform: scale(0.98);
+        }
+
+        /* Output Area */
+        .result-box {
+            display: none;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #333;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .hashtags-display {
+            font-size: 15px;
+            color: #e1e1e1;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+        }
+
+        /* Copy Button */
+        .btn-copy {
+            width: 100%;
+            padding: 10px;
+            background: #25f4ee;
+            border: none;
+            border-radius: 6px;
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-copy.copied {
+            background: #4cd137;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>TikTok <span>Viral</span> Hashtags</h1>
+        <p class="subtitle">Select your video category to get trending hashtags</p>
+
+        <!-- Category Dropdown -->
+        <label for="category">Choose Video Category:</label>
+        <select id="category">
+            <option value="funny">Funny & Comedy</option>
+            <option value="gaming">Gaming & Streaming</option>
+            <option value="tech">Tech & Coding</option>
+            <option value="cooking">Food & Cooking</option>
+            <option value="fashion">Fashion & Lifestyle</option>
+            <option value="motivation">Motivation & Quotes</option>
+        </select>
+
+        <!-- Action Button -->
+        <button class="btn-generate" onclick="generateTags()">Generate Hashtags</button>
+
+        <!-- Result Box (Hidden by default) -->
+        <div class="result-box" id="resultBox">
+            <div class="hashtags-display" id="tagsOutput"></div>
+            <button class="btn-copy" id="copyBtn" onclick="copyToClipboard()">Copy All Tags</button>
+        </div>
+    </div>
+
+    <script>
+        // Hashtags Database (Aap isme mazeed categories aur tags add kar sakte hain)
+        const hashtagDatabase = {
+            funny: "#funny #memes #comedy #lol #fun #tiktokcomedy #viralfunny #trending #fypシ",
+            gaming: "#gaming #gamer #freefire #pubg #coding #setup #gamersoftiktok #twitch #viral",
+            tech: "#tech #technology #coding #programmer #ai #android #python #developer #learntocode",
+            cooking: "#food #cooking #recipe #foodie #delicious #tiktokfood #chef #easyrecipe #yummy",
+            fashion: "#fashion #ootd #style #lifestyle #beauty #makeup #outfit #viralstyle #aesthetic",
+            motivation: "#motivation #quotes #success #mindset #inspiration #hardwork #growth #foryou"
+        };
+
+        function generateTags() {
+            const categorySelect = document.getElementById('category').value;
+            const tagsOutput = document.getElementById('tagsOutput');
+            const resultBox = document.getElementById('resultBox');
+            const copyBtn = document.getElementById('copyBtn');
+
+            // Database se tags uthana
+            const selectedTags = hashtagDatabase[categorySelect];
+
+            // UI par display karna
+            tagsOutput.innerText = selectedTags;
+            resultBox.style.display = 'block';
+
+            // Reset copy button status
+            copyBtn.innerText = "Copy All Tags";
+            copyBtn.classList.remove('copied');
+        }
+
+        function copyToClipboard() {
+            const tagsText = document.getElementById('tagsOutput').innerText;
+            const copyBtn = document.getElementById('copyBtn');
+
+            // Text copy karne ka modern tarika
+            navigator.clipboard.writeText(tagsText).then(() => {
+                copyBtn.innerText = "Copied! ✓";
+                copyBtn.classList.add('copied');
+            }).catch(err => {
+                alert("Oops, unable to copy", err);
+            });
+        }
+    </script>
+</body>
+</html>
